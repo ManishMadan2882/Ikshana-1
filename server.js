@@ -16,7 +16,7 @@ app.use(session({
     saveUninitialized:true,
     cookie:{maxAge : 7*3600*24*1000 },
     secret: secret_key,
-    store:MongoStore.create({mongoUrl : "mongodb://localhost:27017/ikshana"})
+    store:MongoStore.create({mongoUrl : "mongodb+srv://aryan:root@cluster0.emkdwod.mongodb.net/?retryWrites=true&w=majority"})
   }));
 
 app.post('/register',async (req,res)=>{
