@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
-mongoose.connect("mongodb+srv://aryan:root@cluster0.emkdwod.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser:true})
+//mongodb://localhost:27017/ikshana
+mongoose.connect("mongodb://localhost:27017/ikshana",{useNewUrlParser:true})
 mongoose.set('strictQuery',true)
 
 const db=mongoose.connection
@@ -21,32 +22,7 @@ const patientSchema=new mongoose.Schema({
     password:
     {
         type:String
-    },
-    age:
-    {
-        type:String
-    },
-    gender:
-    {
-        type:String
-    },
-    chronicDisorder:
-    {
-        type:Array,
-        default:[""]
-        
-    },
-    informationNote:
-    {
-        type:Array,
-        default:[""]
-    },
-    donations:
-    {
-        type:Array,
-        default:[""]
     }
-
 })
 // module.exports = mongoose.model("user",merchantSchema);
 const donorSchema=new mongoose.Schema({
@@ -68,7 +44,7 @@ const donorSchema=new mongoose.Schema({
     availability:
     {
         type:Array,
-        default:[""]
+        default:[false,false,false,false,false,false,false,false,false]
     }
 })
 

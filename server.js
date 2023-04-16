@@ -16,12 +16,14 @@ app.use(session({
     saveUninitialized:true,
     cookie:{maxAge : 7*3600*24*1000 },
     secret: secret_key,
-    store:MongoStore.create({mongoUrl : "mongodb+srv://aryan:root@cluster0.emkdwod.mongodb.net/?retryWrites=true&w=majority"})
+    store:MongoStore.create({mongoUrl : "mongodb://localhost:27017/ikshana"})
   }));
+
 
 app.post('/register',async (req,res)=>{
     const type = req.body.type;
     const email=req.body.email;
+    
     const password=await bcrypt.hash(req.body.password,3);
     
   const newUser = {
@@ -30,6 +32,7 @@ app.post('/register',async (req,res)=>{
         name:req.body.name,
         type:type
   };
+
   console.log(newUser);
    let newEntry;
    if(req.body.type === 'patient')
@@ -45,6 +48,37 @@ app.post('/register',async (req,res)=>{
         );
 });
 
+app.post("/avail",async (req,res)=>{
+  const email = req.session.email;
+  let db = await donorSchema.findOne({email:email});
+  db.availability = req.body.arr;
+  db.save()
+  .then(()=> res.json({msg:"updated"}))
+  .catch((err)=>res.json({msg:err}))
+})
+app.get("/avail",async (req,res)=>{
+  if(req.session.type === 'donar'){
+  const email = req.session.email;
+  let dbx = await donorSchema.findOne({email:email});
+  res.json({
+   arr:dbx.availability 
+  })
+}
+else
+res.status(403).json({msg :"UnAuthorised"})
+})
+
+app.post("/filter",async(req,res)=>{
+  const  organ  = req.body.organ
+  let arr= ["Liver","Pancreas","Lungs","Heart","Eye","Kidney","Plasma","Intestine","Brain"]
+  const ind = arr.indexOf(organ)
+  const donars= await donorSchema.find({})
+  const filtered=donars.filter(elem =>
+    (elem.availability[ind] == true) 
+  )
+  console.log(filtered);
+   res.status(200).json(filtered)
+})
 
 app.post('/login',async (req,res) => {
     const {email ,  password,type} = req.body;
@@ -65,7 +99,7 @@ app.post('/login',async (req,res) => {
          req.session.type = type
          req.session.save((err)=>
          console.log(err))
-        res.status(202).json({message : "access given",status:true});
+        res.status(202).json({message : "access given",status:true,type:req.session.type});
         
       }
       else
@@ -85,8 +119,10 @@ app.get('/patient',async(req,res)=>
 
 app.get('/donor',async(req,res)=>
 {
-    res.json(donorSchema)
-})
+  dono.find({}, (err, users) => {
+   console.log(users);
+  }
+)})
 app.post('/patient',async(req,res)=>
 {
     console.log(req.body)
