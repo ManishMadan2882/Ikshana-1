@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-mongoose.connect("mongodb://localhost:27017/ikshana",{useNewUrlParser:true})
+mongoose.connect("mongodb+srv://aryan:root@cluster0.emkdwod.mongodb.net/?retryWrites=true&w=majority",{useNewUrlParser:true})
 mongoose.set('strictQuery',true)
 
 const db=mongoose.connection
